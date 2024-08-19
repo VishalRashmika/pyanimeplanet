@@ -12,7 +12,10 @@ def main():
     # print(watchlist["Anime"][1]["episodes"])
 
     # stats.get_watching_list()
-    stats.get_want_to_watch_list()
+    # stats.get_want_to_watch_list()
+    # stats.get_wont_watch_list()
+    # stats.get_dropped_list()
+    stats.get_stalled_list()
 
 main()
 
