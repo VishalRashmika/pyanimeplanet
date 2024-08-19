@@ -1,12 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 import math
-
-username = ""
+import re
 
 def setusername(name):
+    global username
     username = name
-
 
 def count_extract(source):
     return str(str(source).split('>')[1]).split('<')[0]
@@ -30,7 +29,6 @@ def get_total_anime_rating(source):
     return total_anime_rating
 
 def get_animestats():
-    username = "AkiraArashikage"
     profile_link = f"https://www.anime-planet.com/users/{username}"
 
     r = requests.get(
@@ -78,7 +76,7 @@ def get_animestats():
 
     animestats = {
         "watched": int(watched_count), 
-        "watching" : int(watched_count), 
+        "watching" : int(watching_count), 
         "want to watch" : int(want_to_watch_count), 
         "stalled" : int(stalled_count), 
         "dropped" : int(dropped_count), 
@@ -96,6 +94,108 @@ def get_watched_list():
     stats = get_animestats()
     watched_anime = stats["watched"]
     number_of_pages = math.ceil(watched_anime / 35)
+
+    watched_list = {
+        "Anime" : [
+            {"title" : "sample_title", "rating" : 5.0, "episodes" : 12},
+        ]
+    }
+
     for i in range (number_of_pages):
-        page_url = f"https://www.anime-planet.com/users/AkiraArashikage/anime/watched?sort=title&page={i+1}"
-        
+        page_url = f"https://www.anime-planet.com/users/{username}/anime/watched?sort=title&page={i+1}"
+        response = requests.get(
+            page_url,
+            headers = {
+                'User-Agent': 'Popular browser\'s user-agent',
+            }
+        )
+        source = BeautifulSoup(response.text, 'html.parser')
+        titles = source.find_all('h3', class_="cardName")
+        episodes = re.findall(r"\w+-\w+-\w+=\"\d+\"",str(source.find_all('li',class_="card")))
+        rating = source.find_all('div', class_="ttRating")
+        counter = 0
+
+        for title in titles:
+            name = str(str(title).split('>')[1]).split('<')[0]
+            episode = str(episodes[counter].split('"')[1])
+            rate = str(str(rating[counter]).split('>')[1]).split('<')[0]
+            data = [{"title" : str(name), "rating" : float(rate), "episodes" : int(episode)}]
+            watched_list["Anime"].extend(data)
+            counter += 1
+    
+    return watched_list
+
+def get_watching_list():
+    stats = get_animestats()
+    watching_anime = stats["watching"]
+    number_of_pages = math.ceil(watching_anime / 35)
+    
+    watching_list = {
+        "Anime" : [
+            {"title" : "sample_title", "rating" : 5.0, "episodes" : 12},
+        ]
+    }
+    for i in range (number_of_pages):
+        page_url = f"https://www.anime-planet.com/users/{username}/anime/watching?sort=title&page={i+1}"
+        response = requests.get(
+            page_url,
+            headers = {
+                'User-Agent': 'Popular browser\'s user-agent',
+            }
+        )
+        source = BeautifulSoup(response.text, 'html.parser')
+        titles = source.find_all('h3', class_="cardName")
+        rating = source.find_all('div', class_="ttRating")
+        episodes = re.findall(r"\w+-\w+-\w+=\"\d+\"",str(source.find_all('li',class_="card")))
+        watched_episodes = re.findall(r"<\/span> \d+ eps", str(source))
+        counter = 0
+
+        for title in titles:
+            name = str(str(title).split('>')[1]).split('<')[0]
+            rate = str(str(rating[counter]).split('>')[1]).split('<')[0]
+            episode = str(episodes[counter].split('"')[1])
+            num_watched_episodes = watched_episodes[counter].split(' ')[1]
+            
+            data = [{"title" : str(name), "rating" : float(rate), "episodes" : int(episode), "watched episodes" : int(num_watched_episodes)}]
+            watching_list["Anime"].extend(data)
+            counter += 1
+    
+    return watching_list
+
+def get_want_to_watch_list():
+    stats = get_animestats()
+    watched_anime = stats["want to watch"]
+    number_of_pages = math.ceil(watched_anime / 35)
+
+    wanttowatch_list = {
+        "Anime" : [
+            {"title" : "sample_title"},
+        ]
+    }
+
+    for i in range (number_of_pages):
+        page_url = f"https://www.anime-planet.com/users/{username}/anime/wanttowatch?sort=title&page={i+1}"
+        response = requests.get(
+            page_url,
+            headers = {
+                'User-Agent': 'Popular browser\'s user-agent',
+            }
+        )
+        source = BeautifulSoup(response.text, 'html.parser')
+        titles = source.find_all('h3', class_="cardName")
+
+        for title in titles:
+            name = str(str(title).split('>')[1]).split('<')[0]
+            data = [{"title" : str(name)}]
+            wanttowatch_list["Anime"].extend(data)
+    
+    return wanttowatch_list
+
+def stalled_list():
+    pass
+
+def dropped_list():
+    pass
+
+def wont_watch_list():
+    pass
