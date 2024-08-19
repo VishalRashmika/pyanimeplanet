@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import math
 
 username = ""
 
@@ -29,6 +30,7 @@ def get_total_anime_rating(source):
     return total_anime_rating
 
 def get_animestats():
+    username = "AkiraArashikage"
     profile_link = f"https://www.anime-planet.com/users/{username}"
 
     r = requests.get(
@@ -91,4 +93,9 @@ def get_animestats():
 
 
 def get_watched_list():
-    pass
+    stats = get_animestats()
+    watched_anime = stats["watched"]
+    number_of_pages = math.ceil(watched_anime / 35)
+    for i in range (number_of_pages):
+        page_url = f"https://www.anime-planet.com/users/AkiraArashikage/anime/watched?sort=title&page={i+1}"
+        

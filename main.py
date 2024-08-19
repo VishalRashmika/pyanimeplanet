@@ -1,8 +1,11 @@
 import stats
 
 def main():
-    anilist = stats.get_animestats("AkiraArashikage")
+    stats.setusername("AkiraArashikage")
+    anilist = stats.get_animestats()
     print(anilist)
+
+    stats.get_watched_list()
 
 main()
 
