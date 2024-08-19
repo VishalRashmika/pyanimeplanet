@@ -1,6 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 
+username = ""
+
+def setusername(name):
+    username = name
+
+
 def count_extract(source):
     return str(str(source).split('>')[1]).split('<')[0]
 
@@ -22,7 +28,7 @@ def get_total_anime_rating(source):
     total_anime_rating = int(str(str(source.find('p', class_= "plr-total pure-1-4")).split('>')[1]).split('\n')[1])
     return total_anime_rating
 
-def get_animestats(username):
+def get_animestats():
     profile_link = f"https://www.anime-planet.com/users/{username}"
 
     r = requests.get(
@@ -82,3 +88,7 @@ def get_animestats(username):
     }
 
     return animestats
+
+
+def get_watched_list():
+    pass
