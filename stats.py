@@ -53,6 +53,7 @@ def get_animestats():
         }
     )
     source = BeautifulSoup(r.text, 'html.parser')
+    print(source)
     animelist_data = source.find('div', class_="plr-list pure-1 md-1-2")
 
     # watched
@@ -310,3 +311,22 @@ def get_wont_watch_list():
     wontwatch_list["Anime"].pop(0)
 
     return wontwatch_list
+
+def get_full_info():
+    full_info = {
+        "stats" : [],
+        "watched" : [],
+        "Watching" : [],
+        "want to watch" : [],
+        "stalled" : [],
+        "dropped" : [],
+        "won't watch" : [],
+    }
+    stats = get_animestats()
+    watched = get_watched_list()
+    watching = get_watching_list()
+    want_to_watch = get_want_to_watch_list()
+    stalled = get_stalled_list()
+    dropped = get_dropped_list()
+    wont_watch = get_wont_watch_list()
+    print(stats)
