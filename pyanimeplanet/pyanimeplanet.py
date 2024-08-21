@@ -1,8 +1,8 @@
-import requests
 from bs4 import BeautifulSoup
 import math
 import re
 import sys
+from selenium import webdriver
 
 def set_username(name):
     global username
@@ -13,13 +13,9 @@ def count_extract(source):
 
 def check_username(name):
     profile_link = f"https://www.anime-planet.com/users/{name}"
-    r = requests.get(
-        profile_link,
-        headers = {
-            'User-Agent': 'Popular browser\'s user-agent',
-        }
-    )
-    source = BeautifulSoup(r.text, 'html.parser')
+    dr = webdriver.Chrome()
+    dr.get(profile_link)
+    source = BeautifulSoup(dr.page_source, 'html.parser')
     data = source.find('div', class_="lifeOnAnime")
 
     if str(data) == 'None':
@@ -50,16 +46,10 @@ def get_total_anime_rating(source):
 
 def anime_stats():
     if check_username(username):
-             
         profile_link = f"https://www.anime-planet.com/users/{username}"
-     
-        r = requests.get(
-            profile_link,
-            headers = {
-                'User-Agent': 'Popular browser\'s user-agent',
-            }
-        )
-        source = BeautifulSoup(r.text, 'html.parser')
+        dr = webdriver.Chrome()
+        dr.get(profile_link)
+        source = BeautifulSoup(dr.page_source, 'html.parser')
         animelist_data = source.find('div', class_="plr-list pure-1 md-1-2")
      
         # watched
@@ -125,13 +115,9 @@ def watched_list():
 
         for i in range (number_of_pages):
             page_url = f"https://www.anime-planet.com/users/{username}/anime/watched?sort=title&page={i+1}"
-            response = requests.get(
-                page_url,
-                headers = {
-                    'User-Agent': 'Popular browser\'s user-agent',
-                }
-            )
-            source = BeautifulSoup(response.text, 'html.parser')
+            dr = webdriver.Chrome()
+            dr.get(page_url)
+            source = BeautifulSoup(dr.page_source, 'html.parser')
             titles = source.find_all('h3', class_="cardName")
             episodes = re.findall(r"\w+-\w+-\w+=\"\d+\"",str(source.find_all('li',class_="card")))
             rating = source.find_all('div', class_="ttRating")
@@ -162,13 +148,9 @@ def watching_list():
         }
         for i in range (number_of_pages):
             page_url = f"https://www.anime-planet.com/users/{username}/anime/watching?sort=title&page={i+1}"
-            response = requests.get(
-                page_url,
-                headers = {
-                    'User-Agent': 'Popular browser\'s user-agent',
-                }
-            )
-            source = BeautifulSoup(response.text, 'html.parser')
+            dr = webdriver.Chrome()
+            dr.get(page_url)
+            source = BeautifulSoup(dr.page_source, 'html.parser')
             titles = source.find_all('h3', class_="cardName")
             rating = source.find_all('div', class_="ttRating")
             episodes = re.findall(r"\w+-\w+-\w+=\"\d+\"",str(source.find_all('li',class_="card")))
@@ -203,13 +185,9 @@ def want_to_watch_list():
 
         for i in range (number_of_pages):
             page_url = f"https://www.anime-planet.com/users/{username}/anime/wanttowatch?sort=title&page={i+1}"
-            response = requests.get(
-                page_url,
-                headers = {
-                    'User-Agent': 'Popular browser\'s user-agent',
-                }
-            )
-            source = BeautifulSoup(response.text, 'html.parser')
+            dr = webdriver.Chrome()
+            dr.get(page_url)
+            source = BeautifulSoup(dr.page_source, 'html.parser')
             titles = source.find_all('h3', class_="cardName")
 
             for title in titles:
@@ -234,13 +212,9 @@ def stalled_list():
         }
         for i in range (number_of_pages):
             page_url = f"https://www.anime-planet.com/users/{username}/anime/stalled?sort=title&page={i+1}"
-            response = requests.get(
-                page_url,
-                headers = {
-                    'User-Agent': 'Popular browser\'s user-agent',
-                }
-            )
-            source = BeautifulSoup(response.text, 'html.parser')
+            dr = webdriver.Chrome()
+            dr.get(page_url)
+            source = BeautifulSoup(dr.page_source, 'html.parser')
             titles = source.find_all('h3', class_="cardName")
             rating = source.find_all('div', class_="ttRating")
             episodes = re.findall(r"\w+-\w+-\w+=\"\d+\"",str(source.find_all('li',class_="card")))
@@ -274,13 +248,9 @@ def dropped_list():
         }
         for i in range (number_of_pages):
             page_url = f"https://www.anime-planet.com/users/{username}/anime/dropped?sort=title&page={i+1}"
-            response = requests.get(
-                page_url,
-                headers = {
-                    'User-Agent': 'Popular browser\'s user-agent',
-                }
-            )
-            source = BeautifulSoup(response.text, 'html.parser')
+            dr = webdriver.Chrome()
+            dr.get(page_url)
+            source = BeautifulSoup(dr.page_source, 'html.parser')
             titles = source.find_all('h3', class_="cardName")
             rating = source.find_all('div', class_="ttRating")
             episodes = re.findall(r"\w+-\w+-\w+=\"\d+\"",str(source.find_all('li',class_="card")))
@@ -315,13 +285,9 @@ def wont_watch_list():
 
         for i in range (number_of_pages):
             page_url = f"https://www.anime-planet.com/users/{username}/anime/wontwatch?sort=title&page={i+1}"
-            response = requests.get(
-                page_url,
-                headers = {
-                    'User-Agent': 'Popular browser\'s user-agent',
-                }
-            )
-            source = BeautifulSoup(response.text, 'html.parser')
+            dr = webdriver.Chrome()
+            dr.get(page_url)
+            source = BeautifulSoup(dr.page_source, 'html.parser')
             titles = source.find_all('h3', class_="cardName")
 
             for title in titles:

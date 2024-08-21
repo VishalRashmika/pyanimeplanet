@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.1.2'
+VERSION = '1.0.0'
 DESCRIPTION = 'A python module to extract information from anime-planet website'
-LONG_DESCRIPTION = 'A package that allows to extract information from anime planet website without logging.'
+LONG_DESCRIPTION = 'A package that allows to extract information from anime planet website without login. This module uses the selenium web driver to scrap details from the web'
 
 setup(
     name="pyanimeplanet",
@@ -13,7 +13,7 @@ setup(
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
     packages=find_packages(),
-    install_requires=['requests==2.32.3', 'bs4'],
+    install_requires=['bs4', 'selenium==4.23.1'],
     keywords=['python', 'web-scraping', 'animeplanet', 'anime'],
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
