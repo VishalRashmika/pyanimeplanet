@@ -1,8 +1,8 @@
-import stats
+import pyanimeplanet as pp
 
 def main():
-    stats.setusername("AkiraArashikage")
-    anilist = stats.get_animestats()
+    pp.setusername("AkiraArashikage")
+    anilist = pp.anime_stats()
     print(anilist)
 
     # watchlist = stats.get_watched_list()
@@ -16,7 +16,7 @@ def main():
     # stats.get_wont_watch_list()
     # stats.get_dropped_list()
     #stats.get_stalled_list()
-    # stats.get_full_info()
+    # print(pp.full_info())
 
 main()
 
