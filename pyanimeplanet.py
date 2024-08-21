@@ -8,6 +8,8 @@ def setusername(name):
     global username
     username = name
 
+checked = False
+
 def count_extract(source):
     return str(str(source).split('>')[1]).split('<')[0]
 
@@ -28,7 +30,6 @@ def check_username(name):
         sys.exit("Error : username is not valid. Enter a valid username")
     else:
         return True
-    
 
 
 def calculate_time_minutes(min,hours,days,weeks,months,years):
@@ -50,10 +51,10 @@ def get_total_anime_rating(source):
     return total_anime_rating
 
 def anime_stats():
-    if check_username(username) == True:
-
+    if check_username(username):
+             
         profile_link = f"https://www.anime-planet.com/users/{username}"
-
+     
         r = requests.get(
             profile_link,
             headers = {
@@ -62,30 +63,30 @@ def anime_stats():
         )
         source = BeautifulSoup(r.text, 'html.parser')
         animelist_data = source.find('div', class_="plr-list pure-1 md-1-2")
-
+     
         # watched
         watched = (animelist_data.find('li',class_="status1")).find('span',class_="slCount")
         watched_count = count_extract(watched)
-
+     
         # watching
         watching = (animelist_data.find('li',class_="status2")).find('span',class_="slCount")
         watching_count = count_extract(watching)
-
+     
         want_to_watch = (animelist_data.find('li',class_="status4")).find('span',class_="slCount")
         want_to_watch_count = count_extract(want_to_watch)
-
+     
         stalled = (animelist_data.find('li',class_="status5")).find('span',class_="slCount")
         stalled_count = count_extract(stalled)
-
+     
         dropped = (animelist_data.find('li',class_="status3")).find('span',class_="slCount")
         dropped_count = count_extract(dropped)
-
+     
         wont_watch = (animelist_data.find('li',class_="status6")).find('span',class_="slCount")
         wont_watch_count = count_extract(wont_watch)
-
+     
         total_episodes = (animelist_data.find('i', id="totalEps"))
         total_episodes_count = count_extract(total_episodes).replace(',','')
-
+     
         life_on_anime_data = str(source.find('ul', class_= "loa-labels pure-g")).split('>')
         minutes = str(life_on_anime_data[2]).split('\n')[0]
         hours = str(life_on_anime_data[6]).split('\n')[0]
@@ -96,7 +97,7 @@ def anime_stats():
         life_on_anime_min = calculate_time_minutes(minutes,hours,days,weeks,months,years)
         life_on_anime_hours = calculate_time_hours(minutes,hours,days,weeks,months,years)
         total_anime_rating = get_total_anime_rating(source)
-
+     
         animestats = {
             "watched": int(watched_count), 
             "watching" : int(watching_count), 
@@ -109,14 +110,11 @@ def anime_stats():
             "total watchtime (in hours)" : float(life_on_anime_hours),
             "total anime ratings" : total_anime_rating,
         }
-
+     
         return animestats
-    
-    else:
-        return("Error : username is not valid. Enter a valid username")
 
 def watched_list():
-    if check_username(username) == True:
+    try:
         stats = anime_stats()
         watched_anime = stats["watched"]
         number_of_pages = math.ceil(watched_anime / 35)
@@ -150,11 +148,11 @@ def watched_list():
                 counter += 1
         watched_list["Anime"].pop(0)
         return watched_list
-    else:
-        return("Error : username is not valid. Enter a valid username")
-    
+    except AttributeError:
+        sys.exit("Error!")
+
 def watching_list():
-    if check_username(username) == True:
+    try:
         stats = anime_stats()
         watching_anime = stats["watching"]
         number_of_pages = math.ceil(watching_anime / 35)
@@ -190,11 +188,11 @@ def watching_list():
                 counter += 1
         watching_list["Anime"].pop(0)
         return watching_list
-    else:
-        return("Error : username is not valid. Enter a valid username")
+    except AttributeError:
+        sys.exit("Error!")
 
 def want_to_watch_list():
-    if check_username(username) == True:
+    try:
         stats = anime_stats()
         watched_anime = stats["want to watch"]
         number_of_pages = math.ceil(watched_anime / 35)
@@ -222,11 +220,11 @@ def want_to_watch_list():
                 wanttowatch_list["Anime"].extend(data)
         wanttowatch_list["Anime"].pop(0)
         return wanttowatch_list
-    else:
-        return("Error : username is not valid. Enter a valid username")
+    except AttributeError:
+        sys.exit("Error!")
 
 def stalled_list():
-    if check_username(username) == True:
+    try:
         stats = anime_stats()
         watching_anime = stats["stalled"]
         number_of_pages = math.ceil(watching_anime / 35)
@@ -262,11 +260,11 @@ def stalled_list():
                 counter += 1
         stalled_list["Anime"].pop(0)
         return stalled_list
-    else:
-        return("Error : username is not valid. Enter a valid username")
+    except AttributeError:
+        sys.exit("Error!")
 
 def dropped_list():
-    if check_username(username) == True:
+    try:
         stats = anime_stats()
         watching_anime = stats["dropped"]
         number_of_pages = math.ceil(watching_anime / 35)
@@ -302,11 +300,11 @@ def dropped_list():
                 counter += 1
         dropped_list["Anime"].pop(0)
         return dropped_list
-    else:
-        return("Error : username is not valid. Enter a valid username")
+    except AttributeError:
+        sys.exit("Error!")
 
 def wont_watch_list():
-    if check_username(username) == True:
+    try:
         stats = anime_stats()
         watched_anime = stats["won't watch"]
         number_of_pages = math.ceil(watched_anime / 35)
@@ -335,33 +333,36 @@ def wont_watch_list():
         wontwatch_list["Anime"].pop(0)
 
         return wontwatch_list
-    else:
-        return("Error : username is not valid. Enter a valid username")
+    except AttributeError:
+        sys.exit("Error!")
 
 def full_info():
-    full_info = {
-        "stats" : [],
-        "watched" : [],
-        "watching" : [],
-        "want to watch" : [],
-        "stalled" : [],
-        "dropped" : [],
-        "won't watch" : [],
-    }
-    stats = anime_stats()
-    watched = watched_list()
-    watching = watching_list()
-    want_to_watch = want_to_watch_list()
-    stalled = stalled_list()
-    dropped = dropped_list()
-    wont_watch = wont_watch_list()
+    try:
+        full_info = {
+            "stats" : [],
+            "watched" : [],
+            "watching" : [],
+            "want to watch" : [],
+            "stalled" : [],
+            "dropped" : [],
+            "won't watch" : [],
+        }
+        stats = anime_stats()
+        watched = watched_list()
+        watching = watching_list()
+        want_to_watch = want_to_watch_list()
+        stalled = stalled_list()
+        dropped = dropped_list()
+        wont_watch = wont_watch_list()
 
-    full_info['stats'].extend([stats])
-    full_info['watched'].extend(watched['Anime'])
-    full_info['watching'].extend(watching['Anime'])
-    full_info['want to watch'].extend(want_to_watch['Anime'])
-    full_info['stalled'].extend(stalled['Anime'])
-    full_info['dropped'].extend(dropped['Anime'])
-    full_info['won\'t watch'].extend(wont_watch['Anime'])
+        full_info['stats'].extend([stats])
+        full_info['watched'].extend(watched['Anime'])
+        full_info['watching'].extend(watching['Anime'])
+        full_info['want to watch'].extend(want_to_watch['Anime'])
+        full_info['stalled'].extend(stalled['Anime'])
+        full_info['dropped'].extend(dropped['Anime'])
+        full_info['won\'t watch'].extend(wont_watch['Anime'])
 
-    return full_info
+        return full_info
+    except AttributeError:
+        sys.exit("Error!")

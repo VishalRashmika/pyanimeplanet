@@ -1,9 +1,9 @@
 import pyanimeplanet as pp
 
 def main():
-    pp.setusername("awdawdd")
-    anilist = pp.anime_stats()
-    print(anilist)
+    pp.setusername("awdad")
+    # anilist = pp.anime_stats()
+    # print(anilist)
 
     # watchlist = stats.get_watched_list()
     # print(watchlist["Anime"][1])
@@ -16,7 +16,7 @@ def main():
     # stats.get_wont_watch_list()
     # stats.get_dropped_list()
     #stats.get_stalled_list()
-    # print(pp.full_info())
+    print(pp.full_info())
 
 main()
 
