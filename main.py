@@ -1,7 +1,7 @@
 import pyanimeplanet as pp
 
 def main():
-    pp.setusername("AkiraArashikage")
+    pp.setusername("awdawdd")
     anilist = pp.anime_stats()
     print(anilist)
 
